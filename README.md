@@ -21,15 +21,15 @@ DevOps CI/CD Pipeline Stages largely troubleshoot issues around AWS, Kubernetes
 
 Let's discuss these stages in detail:
 
-Stage 1: Platform checks (AWS EKS Cluster): Let's assume that the code is being deployed to dev, then my AWS EKS Cluster in the dev account should be up and running, and the worker nodes should be in Ready state.
+**Stage 1: Platform checks (AWS EKS Cluster):** Let's assume that the code is being deployed to dev, then my AWS EKS Cluster in the dev account should be up and running, and the worker nodes should be in Ready state.
 
-Stage 2: Validate (Dockerfile, Kubernetes syntax checks, policies, Snyk SAST [Static Application Security Testing]): This stage is to test whether the Dockerfile present in the repo and any Kubernetes-based YAML manifest, including helm charts, has the correct syntax. It
+**Stage 2: Validate (Dockerfile, Kubernetes syntax checks, policies, Snyk SAST [Static Application Security Testing]):** This stage is to test whether the Dockerfile present in the repo and any Kubernetes-based YAML manifest, including helm charts, has the correct syntax. It
 
 can also test the Kubernetes policies. We may mention that we are using a tool like Kyverno, which can restrict stuff like "Restrict creation of pods with elevated permissions or Does the pod satisfy resource limits". We have also integrated the Snyk tool within our pipeline to perform SAST on our code to identify code vulnerabilities.
 
-Stage 3: Build Artifact (maven): A build artifact is the final packaged version of our application, ready to be deployed. It could be a .jar, .war file, .zip, .tar.gz, or even a container image. In this stage, once the code has passed the code quality check and unit tests, we initiate the build process. We use Maven to compile the source code, resolve dependencies, and generate a build artifact. This artifact becomes the core output of the build phase and is what we deploy to our dev, test, and production environments.
+**Stage 3: Build Artifact (maven):** A build artifact is the final packaged version of our application, ready to be deployed. It could be a .jar, .war file, .zip, .tar.gz, or even a container image. In this stage, once the code has passed the code quality check and unit tests, we initiate the build process. We use Maven to compile the source code, resolve dependencies, and generate a build artifact. This artifact becomes the core output of the build phase and is what we deploy to our dev, test, and production environments.
 
-Stage 4: Package (build Dockerfile, Helm chart, add meta to image, push to AWS ECR)
+**Stage 4: Package (build Dockerfile, Helm chart, add meta to image, push to AWS ECR)**
 
 Building a Dockerfile means to containerize the application
 
@@ -39,7 +39,7 @@ Build a Helm chart to prepare it for Kubernetes deployment
 
 Push the image and the chart to AWS ECR
 
-Stage 5: Scan container image with Snyk
+**Stage 5: Scan container image with Snyk**
 
 Check if any of the software packages inside the image have known security issues (CVE IDs)
 
@@ -47,7 +47,7 @@ Check if the image has any outdated libraries or risky dependencies
 
 Report anything suspicious, just like how antivirus software shows a list of threats
 
-Stage 6: Promote to dev cluster
+**Stage 6: Promote to dev cluster**
 
 Create a config.yaml file with Terraform and Helm chart versions:
 
@@ -70,21 +70,21 @@ Then, if all tests succeed, then this same Helm Chart will be deployed to prod a
 
 Projects that I work on:
 
-Project 1: Observability (Metrics & Logs): 
+**Project 1: Observability (Metrics & Logs): **
 
-Data Source for metrics- Prometheus Mimir
+**Data Source for metrics- Prometheus Mimir**
 
-Visualization - Grafana
+**Visualization - Grafana**
 
 I am responsible for creating Dashboards and Alerts for developer applications, for example: 
 
-Dashboards:
+**Dashboards:**
 
-Container-Level - CPU and Memory Utilization, container restart count, pod crashloopbackoff count, etc
+**Container-Level -** CPU and Memory Utilization, container restart count, pod crashloopbackoff count, etc
 
-Application-Level - JVM Threads count, API request counts, heap memory related, 4xx and 5xx error counts, http_server_requests count, etc
+**Application-Level -** JVM Threads count, API request counts, heap memory related, 4xx and 5xx error counts, http_server_requests count, etc
 
-Alerts: 
+**Alerts: **
 
 Pod count for an application in dev, qa, or prod goes below 2
 
@@ -96,35 +96,35 @@ Pod was seen in crashloopbackoff error in the last 5 minutes
 
 Container Memory utilization goes over 95%
 
-Project 2: Vulnerability Management:
+**Project 2: Vulnerability Management:**
 
-Snyk for SAST (Static Application Security Testing): This is to identify vulnerabilities on the code level. Mostly it is to scan the pom.xml file in the repository, but other files are also scanned.
+**Snyk for SAST (Static Application Security Testing): **This is to identify vulnerabilities on the code level. Mostly it is to scan the pom.xml file in the repository, but other files are also scanned.
 
-BrightSec for DAST (Dynamic Application Security Testing): This tool scans web URLs associated with various applications.
+**BrightSec for DAST (Dynamic Application Security Testing):** This tool scans web URLs associated with various applications.
 
-Project 3: Tool Migrations: This is being done to follow some specific security compliances and is part of cost optimization
+**Project 3: Tool Migrations: This is being done to follow some specific security compliances and is part of cost optimization**
 
-Continuous Delivery (CD) Platform: Spinnaker to ArgoCD:-
+**Continuous Delivery (CD) Platform: Spinnaker to ArgoCD:-**
 
 We recently moved from Spinnaker to ArgoCD for our CD jobs. 
 
-How did we do it? - The Platform team built the infrastructure and provided the SRE team with a set of steps to make infrastructure-level changes in the application repositories hosted on GitLab. When done correctly, the application pipelines would move from Spinnaker to ArgoCD.
+**How did we do it? -** The Platform team built the infrastructure and provided the SRE team with a set of steps to make infrastructure-level changes in the application repositories hosted on GitLab. When done correctly, the application pipelines would move from Spinnaker to ArgoCD.
 
-Moving Infrastructure and Application metrics from DataDog to Prometheus (data source - Mimir)and Grafana (for visualization):-
-
+**Moving Infrastructure and Application metrics from DataDog to Prometheus (data source - Mimir)and Grafana (for visualization):-
+**
 Again, due to a few security compliance standards and part of cost optimization, we migrated all our metrics from DataDog to the Prometheus/Grafana toolset.
 
-How did we do it? - Again, the platform team built the infrastructure and provided the SRE team with a set of steps to make infrastructure-level changes in the application repositories hosted on GitLab. When done correctly, the metrics (both default and any custom ones) would show up on Grafana (when the data source is chosen as Prometheus Mimir).
+**How did we do it? -** Again, the platform team built the infrastructure and provided the SRE team with a set of steps to make infrastructure-level changes in the application repositories hosted on GitLab. When done correctly, the metrics (both default and any custom ones) would show up on Grafana (when the data source is chosen as Prometheus Mimir).
 
-Moving away from Sumo Logic to Grafana Loki for log aggregation:-
+**Moving away from Sumo Logic to Grafana Loki for log aggregation:-**
 
 The reasons are the same (security compliance and cost optimization), and we moved our logs platform from Sumo Logic to Grafana Loki.
 
-Jenkins to GitLab CI for QA Automation jobs:-
+**Jenkins to GitLab CI for QA Automation jobs:-**
 
 This project is currently in progress at the time of posting this article. We are trying to move away from Jenkins (seriously, it's almost a legacy tool now) to GitLab CI to build our automation jobs.
 
-Project 4: AWS Cost Optimization (A FinOps Project):-
+**Project 4: AWS Cost Optimization (A FinOps Project):-**
 
 This is a future project that I will be working on to save on AWS bills relevant to the following resources:
 
@@ -138,4 +138,4 @@ Old EBS snapshots
 
 And, a few other AWS resources
 
-YouTube Video URL for the above: https://youtu.be/qsT8oPMhxmo
+**YouTube Video URL for all the details on the above:** https://youtu.be/qsT8oPMhxmo

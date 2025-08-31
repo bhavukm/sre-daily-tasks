@@ -14,6 +14,9 @@ If any of the pipeline fails, especially during a production release, the develo
 
 If I talk about what kind of troubleshooting I do. So, this is how the applications' DevOps CI/CD Pipeline looks:
 
+<img width="1000" height="286" alt="image" src="https://github.com/user-attachments/assets/cbd2ec52-a168-44a2-9579-0369b344f574" />
+
+
 DevOps CI/CD Pipeline Stages largely troubleshoot issues around AWS, Kubernetes (AWS EKS), Terraform, Dockerfiles, Container Image, etc.
 
 Let's discuss these stages in detail:
@@ -47,6 +50,9 @@ Report anything suspicious, just like how antivirus software shows a list of thr
 Stage 6: Promote to dev cluster
 
 Create a config.yaml file with Terraform and Helm chart versions:
+
+<img width="353" height="123" alt="image" src="https://github.com/user-attachments/assets/c27c4cd5-cd68-42fb-8060-80522e56190c" />
+
 
 Push the config to another GitLab repo
 

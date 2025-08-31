@@ -139,3 +139,5 @@ Old EBS snapshots
 And, a few other AWS resources
 
 **YouTube Video URL for all the details on the above:** https://youtu.be/qsT8oPMhxmo
+
+**Medium Article:** https://medium.com/@bhavukm_87684/my-daily-tasks-as-a-senior-sre-site-reliability-engineer-interview-preparation-for-sre-d4567f555e65
